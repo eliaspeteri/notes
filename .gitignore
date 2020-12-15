@@ -1,9 +1,11 @@
+node_modules
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
+.eslintcache
 
 # testing
 /coverage
@@ -21,3 +23,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+~WRL0003.tmp
+Web2 - Ex 3 SPECS.rtf
