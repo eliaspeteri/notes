@@ -1,37 +1,82 @@
 import React, { Component } from "react";
 import Dates from "./Dates";
-
-const initialize = {
-  year: "2021",
-  startWeekday: "Friday",
-  january: 31,
-  february: 28,
-  march: 31,
-  april: 30,
-  may: 31,
-  june: 30,
-  july: 31,
-  august: 31,
-  september: 30,
-  october: 31,
-  november: 30,
-  december: 31,
-};
+import moment from "moment";
 
 class Calendar extends Component {
   state = {
-    currentYear: initialize,
-    viewMonth: "January",
+    viewYear: moment().format("YYYY"),
+    viewMonth: moment().format("MM"),
   };
-  render() {
-    const { currentYear, viewMonth } = this.state;
 
-    if (viewMonth === "January")
-      return (
-        <React.Fragment>
-          <Dates days={currentYear.january} />
-        </React.Fragment>
-      );
+  handleClick = (move) => {
+    if (move === "next") {
+      if (this.state.viewMonth === "12")
+        this.setState({
+          viewYear: moment(this.state.viewYear).add(1, "years").format("YYYY"),
+        });
+      this.setState({
+        viewMonth: moment(this.state.viewMonth).add(1, "months").format("MM"),
+      });
+    } else if (move === "previous") {
+      if (this.state.viewMonth === "01")
+        this.setState({
+          viewYear: moment(this.state.viewYear)
+            .subtract(1, "years")
+            .format("YYYY"),
+        });
+      this.setState({
+        viewMonth: moment(this.state.viewMonth)
+          .subtract(1, "months")
+          .format("MM"),
+      });
+    } else if (move === "today") {
+      this.setState({
+        viewYear: moment().format("YYYY"),
+        viewMonth: moment().format("MM"),
+      });
+    }
+  };
+
+  render() {
+    const { viewYear, viewMonth } = this.state;
+    const monthsNamed = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    return (
+      <React.Fragment>
+        <header style={{ border: "1px solid black" }}>
+          <button
+            id="previous-month"
+            onClick={() => this.handleClick("previous")}
+          >
+            PREVIOUS
+          </button>
+          {monthsNamed[viewMonth - 1] + " " + viewYear}
+          <button id="today" onClick={() => this.handleClick("today")}>
+            TODAY
+          </button>
+          <button id="next-month" onClick={() => this.handleClick("next")}>
+            NEXT
+          </button>
+        </header>
+        <div id="image-container"></div>
+        <div id="dates-container">
+          <Dates month={viewMonth} year={viewYear} />
+        </div>
+      </React.Fragment>
+    );
   }
 }
 

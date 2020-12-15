@@ -89,7 +89,12 @@ const Event = (props) => {
   };
   let date = moment().format("LL");
   return (
-    <div>
+    <div
+      id="event"
+      onClick={(e) => {
+        e?.stopPropagation();
+      }}
+    >
       <EventList events={events} />
       <EventForm
         title={newTitle}
