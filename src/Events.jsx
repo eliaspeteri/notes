@@ -23,14 +23,16 @@ const EventForm = (props) => {
 const EventList = (props) => {
   return (
     <div>
-      {props.events.map((event) => (
-        <p key={event.time}>
-          {event.date} <br />
-          {event.title} <br />
-          {event.description} <br />
-          {event.time} <br />
-        </p>
-      ))}
+      {props.currentDate}
+      {props.events.map((event) =>
+        moment(event.date).format("DD.MM.YYYY") === props.currentDate ? (
+          <p key={event.time}>
+            Title: {event.title} <br />
+            Description: {event.description} <br />
+            Time: {event.time} <br />
+          </p>
+        ) : null
+      )}
     </div>
   );
 };
@@ -64,12 +66,11 @@ const Event = (props) => {
   useEffect(hook, []);
 
   const addEvent = (event) => {
-    let date = moment().format("LL");
     event.preventDefault();
     const EventObject = {
       title: newTitle,
       description: newEvent,
-      date: date,
+      date: moment(props.date).format("LL"),
       time: newTime,
       id: "",
     };
@@ -87,7 +88,6 @@ const Event = (props) => {
     //     }, 5000);
     //   });
   };
-  let date = moment().format("LL");
   return (
     <div
       id="event"
@@ -95,11 +95,11 @@ const Event = (props) => {
         e?.stopPropagation();
       }}
     >
-      <EventList events={events} />
+      <EventList events={events} currentDate={props.date} />
       <EventForm
         title={newTitle}
         description={newEvent}
-        date={date}
+        date={props.date}
         time={newTime}
         addEvent={addEvent}
         htc={handleTitleChange}
