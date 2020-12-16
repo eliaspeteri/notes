@@ -8,7 +8,7 @@ const EventForm = (props) => {
         Title: <input value={props.title} onChange={props.htc} />
       </div>
       <div>
-        Note: <input value={props.event} onChange={props.hec} />
+        Description: <input value={props.event} onChange={props.hec} />
       </div>
       <div>
         Time: <input value={props.time} onChange={props.hdc} />
@@ -42,7 +42,7 @@ const Event = (props) => {
   const [newTitle, setNewTitle] = useState("");
   const [newEvent, setNewEvent] = useState("");
   const [newTime, setNewTime] = useState("");
-  //   const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value);
   };
@@ -75,18 +75,18 @@ const Event = (props) => {
       id: "",
     };
 
-    console.log(newTitle);
-    EventService.create(EventObject).then((returnedEvent) => {
-      setEvents(events.concat(returnedEvent));
-      setNewTitle("");
-      console.log("post successful");
-    });
-    //   .catch((error) => {
-    //     setErrorMessage(`Error`);
-    //     setTimeout(() => {
-    //       setErrorMessage(null);
-    //     }, 5000);
-    //   });
+    EventService.create(EventObject)
+      .then((returnedEvent) => {
+        setEvents(events.concat(returnedEvent));
+        setNewTitle("");
+        console.log("post successful");
+      })
+      .catch((error) => {
+        setErrorMessage(`Error`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
   };
   return (
     <div
