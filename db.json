@@ -3,29 +3,43 @@
     {
       "title": "Doctor",
       "description": "Lab results",
-      "date": "December 1, 2020",
+      "date": "2020-12-01",
       "time": "12:00"
-    },
-    {
-      "title": "Go Shopping",
-      "description": "Get Groceries",
-      "date": "December 16, 2020",
-      "time": "12:00",
-      "id": "umzCNlO"
     },
     {
       "title": "Take the day off",
       "description": "",
-      "date": "December 18, 2020",
+      "date": "2020-12-18",
       "time": "",
       "id": "3dVbScT"
     },
     {
       "title": "",
       "description": "",
-      "date": "Invalid date",
+      "date": "2020-12-18",
       "time": "",
       "id": "Qymn4NT"
+    },
+    {
+      "title": "Hello World",
+      "description": "asd",
+      "date": "2020-12-18",
+      "time": "20.00",
+      "id": "fSZmScm"
+    },
+    {
+      "title": "hoo moilanen",
+      "description": "",
+      "date": "2020-12-18",
+      "time": "",
+      "id": "RejM1P_"
+    },
+    {
+      "title": "moo hoilanen",
+      "description": "",
+      "date": "2020-01-01",
+      "time": "",
+      "id": "vAK0Pq9"
     }
   ]
 }
