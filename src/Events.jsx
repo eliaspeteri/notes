@@ -17,6 +17,14 @@ const EventForm = (props) => {
                 Time: <input value={props.time} onChange={props.hdc} />
             </div>
             <div>
+                Important?{" "}
+                <input
+                    type="checkbox"
+                    value={props.importance}
+                    onChange={props.hic}
+                />
+            </div>
+            <div>
                 <button type="submit">save</button>
             </div>
         </form>
@@ -56,6 +64,7 @@ const Event = (props) => {
     const [newTitle, setNewTitle] = useState("");
     const [newEvent, setNewEvent] = useState("");
     const [newTime, setNewTime] = useState("");
+    const [newImportance, setNewImportance] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const handleTitleChange = (event) => {
         setNewTitle(event.target.value);
@@ -66,6 +75,11 @@ const Event = (props) => {
 
     const handleTimeChange = (event) => {
         setNewTime(event.target.value);
+    };
+
+    const handleImportanceChange = (event) => {
+        setNewImportance(event.target.checked);
+        console.log(event.target.checked);
     };
 
     // React effects and hooks are used to fetch data with axios from the JSON-server
@@ -87,8 +101,9 @@ const Event = (props) => {
         const EventObject = {
             title: newTitle,
             description: newEvent,
-            date: moment(props.date).format("LL"),
+            date: moment(props.date).format("YYYY-MM-DD"),
             time: newTime,
+            importance: newImportance,
             id: "",
         };
 
@@ -128,10 +143,12 @@ const Event = (props) => {
                 description={newEvent}
                 date={props.date}
                 time={newTime}
+                importance={newImportance}
                 addEvent={addEvent}
                 htc={handleTitleChange}
                 hec={handleEventChange}
                 hdc={handleTimeChange}
+                hic={handleImportanceChange}
             />
         </div>
     );
