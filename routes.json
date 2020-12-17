@@ -1,3 +1,4 @@
 {
+    "events/:id": "/events\\?id=:id",
     "/events/:date": "/events\\?date=:date"
 }

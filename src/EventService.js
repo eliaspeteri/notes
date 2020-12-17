@@ -21,7 +21,7 @@ const update = (id, newObject) => {
 };
 
 const remove = (id) => {
-    // console.log("Attempting delete request...");
+    console.log("Attempting delete request...");
     return axios.delete(`${url}/${id}`);
 };
 
