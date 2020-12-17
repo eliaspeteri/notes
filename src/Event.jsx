@@ -5,27 +5,41 @@ import moment from "moment";
 // This component handles the form for creating new events for a specific day selected in the calendar
 const EventForm = (props) => {
     return (
-        <form onSubmit={props.addEvent}>
-            <div>
-                Title:
-                <input value={props.title} onChange={props.htc} required />
-            </div>
-            <div>
-                Description: <input value={props.event} onChange={props.hec} />
-            </div>
-            <div>
-                Time: <input value={props.time} onChange={props.hdc} />
-            </div>
-            <div>
-                Important?{" "}
+        <form id="event-form" onSubmit={props.addEvent}>
+            <div className="form-input-text">
+                <label htmlFor="form-title">Title&nbsp;</label>
                 <input
+                    id="form-title"
+                    value={props.title}
+                    onChange={props.htc}
+                    required
+                />
+            </div>
+            <div className="form-input-text">
+                <label htmlFor="form-description">Description&nbsp;</label>
+                <input
+                    id="form-description"
+                    value={props.event}
+                    onChange={props.hec}
+                />
+            </div>
+            <div className="form-input-text">
+                <label htmlFor="form-time">Time&nbsp;</label>
+                <input id="form-time" value={props.time} onChange={props.hdc} />
+            </div>
+            <div className="form-input-checkbox">
+                <label htmlFor="form-importance">Important&nbsp;</label>
+                <input
+                    id="form-importance"
                     type="checkbox"
                     value={props.importance}
                     onChange={props.hic}
                 />
             </div>
             <div>
-                <button type="submit">save</button>
+                <button id="submit-button" type="submit">
+                    save
+                </button>
             </div>
         </form>
     );
@@ -34,16 +48,15 @@ const EventForm = (props) => {
 // This component handles listing all the events for the selected date in the calendar
 const EventList = (props) => {
     return (
-        <div>
-            {moment(props.currentDate).format("LL")}
+        <div id="event-list">
+            <b>{moment(props.currentDate).format("LL")}</b>
             {props.events.map((event) =>
                 moment(event.date).format("YYYY-MM-DD") ===
                 props.currentDate ? (
-                    <div>
+                    <div className="event">
                         <p key={event.id}>
-                            Title: {event.title} <br />
-                            Description: {event.description} <br />
-                            Time: {event.time} <br />
+                            <b>{event.time}</b>&nbsp;
+                            {event.title} <br />
                             <button
                                 onClick={props.removeEvent}
                                 value={event.id}
@@ -51,6 +64,7 @@ const EventList = (props) => {
                                 delete
                             </button>
                         </p>
+                        {event.description} <br />
                     </div>
                 ) : null
             )}
@@ -97,7 +111,6 @@ const Event = (props) => {
     // This function handles adding a new event and pushing it to the JSON-server
     const addEvent = (event) => {
         event.preventDefault();
-        console.log(props.date);
         const EventObject = {
             title: newTitle,
             description: newEvent,
@@ -128,7 +141,7 @@ const Event = (props) => {
     // Here we render everything that would be displayed inside the modal that pops up when a date is clicked in the calendar
     return (
         <div
-            id="event"
+            id="event-container"
             onClick={(e) => {
                 e?.stopPropagation();
             }}
