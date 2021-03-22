@@ -1,149 +1,120 @@
 import React, { Component, useEffect, useState } from "react";
-import { IoArrowBackOutline, IoArrowForwardOutline } from "react-icons/io5";
+import {
+    IoArrowBackOutline,
+    IoArrowForwardOutline,
+    IoArrowUndoOutline,
+} from "react-icons/io5";
+import {
+    getDay,
+    format,
+    addMonths,
+    subMonths,
+    addYears,
+    subYears,
+} from "date-fns";
 import Dates from "./Dates";
-import DropdownMenu from "./DropdownMenu";
-import moment from "moment";
-import ImageJanuary from "./images/January.jpg";
-import ImageDecember from "./images/December.jpg";
-
 class Calendar extends Component {
-  state = {
-    viewYear: moment().format("YYYY"),
-    viewMonth: moment().format("MM"),
-  };
+    state = {
+        today: new Date(),
+        viewDate: new Date(),
+    };
+    handleClick = (move) => {
+        if (move === "next") {
+            console.log("clicked next");
+            if (format(this.state.viewDate, "MM") === "12") {
+                console.log("Previous month was December");
+                this.setState({ viewDate: addYears(this.state.viewDate, 1) });
+            }
+            this.setState({
+                viewDate: addMonths(this.state.viewDate, 1),
+            });
+        } else if (move === "previous") {
+            console.log("clicked previous");
+            if (format(this.state.viewDate, "MM") === "01") {
+                console.log("Previous month was January");
+                this.setState({ viewDate: subYears(this.state.viewDate, 1) });
+            }
+            this.setState({
+                viewDate: subMonths(this.state.viewDate, 1),
+            });
+        } else if (move === "today") {
+            console.log("clicked today");
+            this.setState({ viewDate: this.state.today });
+        }
+    };
 
-  handleClick = (move) => {
-    if (move === "next") {
-      if (this.state.viewMonth === "12")
-        this.setState({
-          viewYear: moment(this.state.viewYear).add(1, "years").format("YYYY"),
-        });
-      this.setState({
-        viewMonth: moment(this.state.viewMonth).add(1, "months").format("MM"),
-      });
-    } else if (move === "previous") {
-      if (this.state.viewMonth === "01")
-        this.setState({
-          viewYear: moment(this.state.viewYear)
-            .subtract(1, "years")
-            .format("YYYY"),
-        });
-      this.setState({
-        viewMonth: moment(this.state.viewMonth)
-          .subtract(1, "months")
-          .format("MM"),
-      });
+    parseWeekday = () => {
+        const today = new Date();
+        switch (getDay(today)) {
+            case 0:
+                return "Sunday";
+            case 1:
+                return "Monday";
+            case 2:
+                return "Tuesday";
+            case 3:
+                return "Wednesday";
+            case 4:
+                return "Thursday";
+            case 5:
+                return "Friday";
+            case 6:
+                return "Saturday";
+            default:
+                return "Unknown weekday";
+        }
+    };
+
+    render() {
+        const { viewDate } = this.state;
+        console.log("rendered Calendar");
+
+        return (
+            <div id="calendar-container">
+                <header>
+                    <div id="clock">
+                        {this.parseWeekday()}&nbsp;
+                        <b>
+                            <Clock />
+                        </b>
+                    </div>
+                </header>
+                <header>
+                    <button
+                        id="previous-month"
+                        onClick={() => {
+                            this.handleClick("previous");
+                        }}
+                    >
+                        <IoArrowBackOutline size={20} color={"#646464"} />
+                    </button>
+                    <b id="month">{`${format(viewDate, "MMMM yyyy")}`}</b>
+                    <button
+                        id="undo-arrow"
+                        onClick={() => this.handleClick("today")}
+                    >
+                        <IoArrowUndoOutline size={20} color={"#646464"} />
+                    </button>
+                    <button
+                        id="next-month"
+                        onClick={() => {
+                            this.handleClick("next");
+                        }}
+                    >
+                        <IoArrowForwardOutline size={20} color={"#646464"} />
+                    </button>
+                </header>
+                <Dates date={viewDate} />
+            </div>
+        );
     }
-  };
-
-  selectFromDropDown = (move) => {
-    if (move === "today")
-      this.setState({
-        viewYear: moment().format("YYYY"),
-        viewMonth: moment().format("MM"),
-      });
-    else this.setState({ viewMonth: move });
-  };
-
-  render() {
-    const { viewYear, viewMonth } = this.state;
-    const monthsNamed = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    console.log("rendered Calendar");
-    return (
-      <div id="calendar-container">
-        <header>
-          <div id="clock">
-            {moment().format("dddd")}&nbsp;
-            <b>
-              <Clock />
-            </b>
-          </div>
-          <DropdownMenu
-            selectFromDropDown={this.selectFromDropDown}
-            monthsNamed={monthsNamed}
-          />
-        </header>
-        <div id="image-container">
-          <MonthImage month={viewMonth} />
-        </div>
-        <header>
-          <button
-            id="previous-month"
-            onClick={() => this.handleClick("previous")}
-          >
-            <IoArrowBackOutline size={20} color={"#646464"} />
-          </button>
-          <b id="month">{monthsNamed[viewMonth - 1] + " " + viewYear}</b>
-          <button id="next-month" onClick={() => this.handleClick("next")}>
-            <IoArrowForwardOutline size={20} color={"#646464"} />
-          </button>
-        </header>
-        <Dates
-          month={viewMonth}
-          year={viewYear}
-          changeMonth={this.handleClick}
-        />
-      </div>
-    );
-  }
 }
-
 export default Calendar;
-/*
-<button id="today" onClick={() => this.handleClick("today")}>
-TODAY
-</button>
-*/
-const MonthImage = ({ month }) => {
-  switch (month) {
-    case "01":
-      return <img src={ImageJanuary} alt="Image of the month" />;
-    /*case "02":
-      return <img src={ImageFebruary} alt="Image of the month" />;
-    case "03":
-      return <img src={ImageMarch} alt="Image of the month" />;
-    case "04":
-      return <img src={ImageApril} alt="Image of the month" />;
-    case "05":
-      return <img src={ImageMay} alt="Image of the month" />;
-    case "06":
-      return <img src={ImageJune} alt="Image of the month" />;
-    case "07":
-      return <img src={ImageJuly} alt="Image of the month" />;
-    case "08":
-      return <img src={ImageAugust} alt="Image of the month" />;
-    case "09":
-      return <img src={ImageSeptember} alt="Image of the month" />;
-    case "10":
-      return <img src={ImageOctober} alt="Image of the month" />;
-    case "11":
-      return <img src={ImageNovember} alt="Image of the month" />;*/
-    case "12":
-      return <img src={ImageDecember} alt="Image of the month" />;
-    default:
-      return null;
-  }
-};
 
 const Clock = () => {
-  const [time, setTime] = useState(moment().format("LT"));
-
-  useEffect(() => {
-    setInterval(() => setTime(moment().format("LT")), 1000);
-  });
-  return time;
+    const [time, setTime] = useState(format(new Date(), "p"));
+    useEffect(() => {
+        setInterval(() => setTime(format(new Date(), "p"), 60000));
+    }, []);
+    return time;
 };

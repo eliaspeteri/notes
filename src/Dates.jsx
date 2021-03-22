@@ -1,149 +1,92 @@
 import React, { Component } from "react";
-import EventService from "./EventService";
-import Event from "./Event";
-import moment from "moment";
-
+import {
+    format,
+    add,
+    sub,
+    set,
+    getYear,
+    getMonth,
+    getDate,
+    startOfMonth,
+} from "date-fns";
+import nextDay from "date-fns/nextDay";
 class Dates extends Component {
-  state = {
-    today: moment().format("YYYY-MM-DD"),
-    events: [],
-    selectedDate: null,
-    writingNote: false,
-  };
+    state = {
+        today: new Date(),
+        events: [],
+        selectedDate: null,
+        writingNote: false,
+    };
 
-  componentDidMount = () => {
-    EventService.getAll()
-      .then((res) => {
-        if (res.status === 200) {
-          this.setState({ events: res.data });
-        }
-      })
-      .catch((res) => {
-        console.log(res.error);
-      });
-  };
+    handleClick = (startDate, date) => {
+        let setDate = format(add(startDate, { days: date }), "yyyy-MM-dd");
+        this.setState({ writingNote: true, selectedDate: setDate });
+    };
 
-  reloadEvents = () => {
-    EventService.getAll()
-      .then((res) => {
-        if (res.status === 200) {
-          this.setState({ events: res.data });
-        }
-      })
-      .catch((res) => {
-        console.log(res.error);
-      });
-  };
+    render() {
+        console.log("rendered Dates");
 
-  handleClick = (startDate, date) => {
-    let setDate = moment(startDate).add(date, "days").format("YYYY-MM-DD");
-    this.setState({ writingNote: true, selectedDate: setDate });
-  };
-
-  closeEvent = () => {
-    this.setState({ writingNote: false });
-  };
-
-  printWeekday = (date) => {
-    return moment(date).format("dddd");
-  };
-
-  render() {
-    let startDate = moment().format(
-      this.props.month + "-01-" + this.props.year
-    );
-
-    console.log("rendered Dates");
-
-    const weekdays = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ];
-
-    while (this.printWeekday(startDate) !== "Monday")
-      startDate = moment(startDate).subtract(1, "days");
-
-    return (
-      <div id="dates-container">
-        {[...Array(7)].map((x, day) => (
-          <div key={day} className="weekdays">
-            <div className="day-names">
-              <b>{weekdays[day]}</b>
+        const weekdays = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+        ];
+        let startDate = set(new Date(), {
+            year: getYear(this.props.date),
+            month: getMonth(this.props.date),
+            date: getDate(
+                nextDay(sub(startOfMonth(this.props.date), { days: 7 }), 1)
+            ),
+        });
+        return (
+            <div id="dates-container">
+                {[...Array(7)].map((x, day) => (
+                    <div key={day} className="weekdays">
+                        <div className="day-names">
+                            <b>{weekdays[day]}</b>
+                        </div>
+                        {[...Array(5)].map((x, week) => (
+                            <div
+                                key={week + day}
+                                // If the currently printed date matches today's date, use the date-today class
+                                className={
+                                    format(
+                                        add(startDate, {
+                                            days: 7 * week + day,
+                                        }),
+                                        "dd"
+                                    ) === format(this.state.today, "dd") &&
+                                    format(this.state.today, "MM") ===
+                                        format(startDate, "MM")
+                                        ? "date-today"
+                                        : // Else if the selected month does not match this month, use the date-different-month class
+                                        format(
+                                              add(startDate, {
+                                                  days: 7 * week + day,
+                                              }),
+                                              "MM"
+                                          ) !== format(this.state.today, "MM")
+                                        ? "date-different-month"
+                                        : // Else use the date class
+                                          "date"
+                                }
+                            >
+                                {format(
+                                    add(startDate, {
+                                        days: 7 * week + day,
+                                    }),
+                                    "d"
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                ))}
             </div>
-            {[...Array(6)].map((x, week) => (
-              <div
-                key={week + day}
-                className={
-                  moment(startDate)
-                    .add(7 * week + day, "days")
-                    .format("YYYY-MM-DD") === this.state.today
-                    ? "date-today"
-                    : moment(startDate)
-                        .add(7 * week + day, "days")
-                        .format("MM") !== this.props.month
-                    ? "date-different-month"
-                    : "date"
-                }
-                onClick={
-                  moment(startDate)
-                    .add(7 * week + day, "days")
-                    .format("YYYY-MM-DD") === this.state.today
-                    ? () => this.handleClick(startDate, 7 * week + day)
-                    : moment(startDate)
-                        .add(7 * week + day, "days")
-                        .format("YYYYMM") <
-                      this.props.year + this.props.month
-                    ? () => this.props.changeMonth("previous")
-                    : moment(startDate)
-                        .add(7 * week + day, "days")
-                        .format("YYYYMM") >
-                      this.props.year + this.props.month
-                    ? () => this.props.changeMonth("next")
-                    : () => this.handleClick(startDate, 7 * week + day)
-                }
-              >
-                {moment(startDate)
-                  .add(7 * week + day, "days")
-                  .format("D")}
-                <ShowEvents
-                  date1={moment(startDate)
-                    .add(7 * week + day, "days")
-                    .format("YYYY-MM-DD")}
-                  events={this.state.events}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
-        {this.state.writingNote ? (
-          <div id="event-background" onClick={this.closeEvent}>
-            <Event
-              updateComponent={this.reloadEvents}
-              date={this.state.selectedDate}
-            />
-          </div>
-        ) : null}
-      </div>
-    );
-  }
+        );
+    }
 }
 export default Dates;
-
-const ShowEvents = ({ date1, events }) => {
-  const showEvents = events.filter((e) => {
-    return e.date === date1;
-  });
-
-  if (showEvents.length === 0) return null;
-  else
-    return showEvents.map((event, i) => (
-      <p key={i} className="calendar-event">
-        <b>{event.time}</b> {event.title}
-      </p>
-    ));
-};
