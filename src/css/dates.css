@@ -7,7 +7,7 @@
 
 .weekdays {
     display: grid;
-    grid-template-rows: 0.1fr 0.15fr 0.15fr 0.15fr 0.15fr 0.15fr 0.15fr;
+    grid-template-rows: 0.15fr 0.15fr 0.15fr 0.15fr 0.15fr 0.15fr 0.15fr;
 }
 
 .day-names {
@@ -21,9 +21,8 @@
 .date,
 .date-today,
 .date-different-month {
+    padding: 3rem 1rem;
     text-align: center;
-    padding-top: 40%;
-    padding-bottom: 40%;
     font-size: 130%;
     font-family: Helvetica-Neue-Light;
     cursor: pointer;
@@ -54,7 +53,6 @@
 .date-different-month:active {
     background: rgb(95, 95, 95);
 }
-
 .calendar-event {
     color: #363636;
     font-size: 45%;
