@@ -1,9 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
-import {
-    IoArrowBackOutline,
-    IoArrowForwardOutline,
-    IoArrowUndoOutline,
-} from "react-icons/io5";
+import { IoArrowBackOutline, IoArrowForwardOutline } from "react-icons/io5";
 import {
     getDay,
     format,
@@ -88,13 +84,20 @@ class Calendar extends Component {
                     >
                         <IoArrowBackOutline size={20} color={"#646464"} />
                     </button>
-                    <b id="month">{`${format(viewDate, "MMMM yyyy")}`}</b>
+
                     <button
-                        id="undo-arrow"
+                        id="today-month"
                         onClick={() => this.handleClick("today")}
                     >
-                        <IoArrowUndoOutline size={20} color={"#646464"} />
+                        {" "}
+                        <b id="month">
+                            {`${format(viewDate, "MMMM")} ${format(
+                                viewDate,
+                                "yyyy"
+                            )}`}{" "}
+                        </b>
                     </button>
+
                     <button
                         id="next-month"
                         onClick={() => {

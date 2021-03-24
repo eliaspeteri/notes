@@ -60,16 +60,17 @@ class Dates extends Component {
                                         }),
                                         "dd"
                                     ) === format(this.state.today, "dd") &&
-                                    format(this.state.today, "MM") ===
-                                        format(startDate, "MM")
+                                    format(this.state.today, "yyyyMM") ===
+                                        format(startDate, "yyyyMM")
                                         ? "date-today"
                                         : // Else if the selected month does not match this month, use the date-different-month class
                                         format(
                                               add(startDate, {
                                                   days: 7 * week + day,
                                               }),
-                                              "MM"
-                                          ) !== format(this.state.today, "MM")
+                                              "yyyyMM"
+                                          ) !==
+                                          format(this.state.today, "yyyyMM")
                                         ? "date-different-month"
                                         : // Else use the date class
                                           "date"
